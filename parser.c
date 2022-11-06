@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 16:57:52 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/10/31 17:12:08 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/06 19:01:11 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ int	check_args(char *str)
 	i = 0;
 	if (str[i] == '\0')
 	{
-		printf("Empty string passed\n");
+		printf("%sEmpty string passed%s\n", YELLOW, END);
 		return (1);
 	}
 	while (str[i] != '\0')
 	{
 		if (!ft_isdigit(str[i]) || ft_atoi(str) == 0)
 		{
-            printf("Passed '0' OR\n");
-			printf("Passed args Contain non digit character\n");
+            printf("%sPassed '0'\n\t- OR -%s\n", YELLOW, END);
+			printf("%sPassed args Contain non digit character%s\n", YELLOW, END);
 			return (1);
 		}
 		i++;
@@ -42,7 +42,8 @@ int	parse_args(int argc, char **argv)
 	i = 1;
 	if (argc < 5 || argc > 6)
 	{
-		printf("Many or little args passed\n");
+		printf("%sError%s\n", RED, END);
+		printf("%sMany or little args passed%s\n", YELLOW, RED);
 		return (1);
 	}
 	while (i < argc)

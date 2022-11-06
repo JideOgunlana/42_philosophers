@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:52:55 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/03 14:05:59 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/06 19:13:26 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,43 +22,47 @@ t_philos	*all(void)
 void	*routine(void	*arg)
 {
 	// t_philos	*philos = all();
-	int index = *(int *) arg;
-	philo_eat(index);
-	// printf("philos position: %d, philos count: %d\n",philos->position, philos->info->philos_count);
+	// int index = *(int *) arg;
+	while (true)
+	{
+		philo_eat((t_philos *)arg);
+		philo_sleep((t_philos *) arg);
+		philo_think((t_philos *)arg);
+	}
+	// printf("philos position: %d, philos count: %d\n",philos[index].position, philos[index].info->philos_count);
 	// printf("philos position: %d, philos count: %d\n",philos[index].position, philos[index].info->philos_count);
 	// printf("Index: %d\n", index);
-	return (0);
+	return (NULL);
 }
 
 int	start_philos(t_info *info, t_philos *philos, pthread_t *threads)
 {
 	int	i;
 
-	(void) philos;
 	i = 0;
 	while (i < info->philos_count)
 	{
 		int *a = malloc(sizeof(int));
 		*a = i;
-		if (pthread_create(&threads[i], NULL, routine, a))
+		if (pthread_create(&threads[i], NULL, routine, &philos[i]))
 		{
-			printf("Error(101)\nFailed to create philosopher threads\n");
+			printf("%sError(101)\nFailed to create philosopher threads%s\n", RED, END);
 			return (101);
 		}
+		usleep(50);
 		i++;
 	}
-	i = 0;
-	while (i < info->philos_count)
-	{
-		if (pthread_join(threads[i], NULL))
-		{
-			printf("Error(102)\nFailed to join threads\n");
-			return (102);
-		}
-		i++;
-	}
-	free(threads);
-	exit(0);
+	// i = 0;
+	// while (i < info->philos_count)
+	// {
+	// 	if (pthread_join(threads[i], NULL))
+	// 	{
+	// 		printf("%sError(102)\nFailed to join threads%s\n", RED, END);
+	// 		return (102);
+	// 	}
+	// 	i++;
+	// }
+	// free(threads);
 	return (0);
 }
 
@@ -93,10 +97,11 @@ int	init_info(int argc, char **argv, t_info *info)
 	memset(info->chop_stick_status, FREE, info->philos_count);
 	if (init_chop_stick_mutex(info))
 	{
-		printf("Mutex initialization error\n");
+		printf("%sMutex initialization error%s\n", RED, END);
 		return (1);
 	}
-	printf("Philosopher count: %d\n Time to die %d\n Time to eat: %d\n Time to sleep: %d\n Must eat time: %d\n", info->philos_count, info->time_to_die, info->time_to_eat, info->time_to_sleep, info->n_times_to_eat);
+	info->start = get_useconds();
+	// printf("Philosopher count: %d\n Time to die %d\n Time to eat: %d\n Time to sleep: %d\n Must eat time: %d\n", info->philos_count, info->time_to_die, info->time_to_eat, info->time_to_sleep, info->n_times_to_eat);
 	return (0);
 }
 
@@ -114,9 +119,10 @@ t_philos	*init_philo(t_info *info)
 		philos[i].r_chop_stick = i;
 		philos[i].l_chop_stick = (i + 1) % info->philos_count;
 		philos[i].state = SLEEPING;
+		philos[i].last_eat_time = info->start;
+		philos[i].num_eat = 0;
 		i++;
 	}
-	i = 0;
 /* 	while (i < info->philos_count)
 	{
 		printf("**philos position: %d, philos count: %d**\n",philos[i].position, philos[i].info->philos_count);
@@ -136,7 +142,12 @@ int	main(int argc, char *argv[])
 
 	if (parse_args(argc, argv))
 	{
-		printf("Usage: <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> <[OPTIONAL]number_of_times_each_philosopher_must_eat>\n");
+		printf("%sUsage:%s <number_of_philosophers> <time_to_die> <time_to_eat> <time_to_sleep> <[OPTIONAL]number_of_times_each_philosopher_must_eat>\n", YELLOW, END);
+		return (0);
+	}
+	if (ft_atoi(argv[1]) > 200)
+	{
+		printf("Invalid arg, max is 200\n");
 		return (0);
 	}
 	info = (t_info *)malloc(sizeof(t_info));
@@ -150,8 +161,11 @@ int	main(int argc, char *argv[])
 		return (0);
 	}
 	philos = init_philo(info);
-	printf("Philo: 1 -> L: %d, R: %d\n", philos[0].l_chop_stick, philos[0].r_chop_stick);
-	printf("Philo: 2 -> L: %d, R: %d\n", philos[1].l_chop_stick, philos[1].r_chop_stick);
 	start_philos(info, philos, threads);
+	check_philos_death(philos, info);
+	// printf("Philo: 1 -> L: %d, R: %d\n", philos[0].l_chop_stick, philos[0].r_chop_stick);
+	// printf("Philo: 2 -> L: %d, R: %d\n", philos[1].l_chop_stick, philos[1].r_chop_stick);
+	// clean_up(threads, info, philos);
+	printf("|Checking philo death|\n");
 	return (0);
 }

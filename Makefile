@@ -4,7 +4,7 @@ FLAGS = -Wall -Werror -Wextra
 
 RM = rm -rf
 
-MANDATORY_SRC = main.c utils.c parser.c philos_routine.c
+MANDATORY_SRC = main.c utils.c parser.c philos_routine.c philos_end.c
 
 NAME:
 	$(CC) $(FLAGS) $(MANDATORY_SRC) -o $(NAME)
