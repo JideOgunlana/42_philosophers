@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:52:55 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/14 22:29:49 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/15 19:35:54 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	init_info(int argc, char **argv, t_info *info)
 	info->count_philos = 0;
 	info->eat_count = 0;
 	info->start_time = get_time();
-	memset(info->using_chop_sticks, 0, sizeof(int) * info->total_philos);
-	memset(info->philo_list, 0, sizeof(int) * info->total_philos);
+	// memset(info->using_chop_sticks, 0, sizeof(int) * info->total_philos);
+	// memset(info->philo_list, 0, sizeof(int) * info->total_philos);
 	return (0);
 }
 
@@ -65,16 +65,8 @@ int	ft_create_thread(t_info *info, pthread_t *philos)
 		if (pthread_create(&philos[i], NULL, routine, info))
 			return (-1);
 		usleep(100);
-		i += 2;
+		i += 1;
 	}
-	// i = 1;
-	// while (i < info->total_philos)
-	// {
-	// 	if (pthread_create(&philos[i], NULL, routine, info))
-	// 		return (-1);
-	// 	usleep(100);
-	// 	i += 2;
-	// }
 	return (0);
 }
 
@@ -103,17 +95,14 @@ int	main(int argc, char *argv[])
 	philos = ft_malloc_philos(&info);
 	if (!philos)
 		return (0);
-	if (pthread_create(&death_monitor, NULL, monitor, &info)
-		|| ft_create_thread(&info, philos) == -1)
-	{
-		free(philos);
+	if (ft_create_thread(&info, philos) == -1)
 		return (0);
-	}
+	if (pthread_create(&death_monitor, NULL, monitor, &info))
+		return (0);
 	info.i = -1;
 	while (++info.i < info.total_philos)
 		pthread_join(philos[info.i], NULL);
 	pthread_join(death_monitor, NULL);
-	// exit(0);
 	clean_up(&info, &philos);
 	return (0);
 }

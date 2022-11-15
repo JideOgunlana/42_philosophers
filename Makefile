@@ -1,6 +1,7 @@
 NAME = philo
 CC = cc
 FLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
+# MAKEFLAG = -j
 
 RM = rm -rf
 
@@ -16,13 +17,13 @@ OBJS = $(addsuffix .o, $(MANDATORY_SRC))
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(FLAGS) $(OBJS_DIR)$< -o $(NAME) 
+	$(CC)  $(FLAGS) $(OBJS_DIR)* -o $(NAME) 
 
 .c.o: $(MAIN)
 	$(CC) -c -o $(OBJS_DIR)$@ $<
 
-clean: $(OBJS)
-	$(RM) $(OBJS_DIR) $<
+clean:
+	$(RM) $(OBJS_DIR)*
 
 fclean: clean
 	$(RM) $(NAME)

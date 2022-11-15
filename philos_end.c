@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 17:23:15 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/14 22:33:59 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/15 19:35:52 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,13 @@ void	clean_up(t_info *info, pthread_t **philos)
 
 int	ft_is_philo_dead(t_info *info, int philo_id)
 {
-	pthread_mutex_lock(&(info->philo_dead_mutex[philo_id]));
 	if (info->philo_list[philo_id] == DEAD)
-	{
-		pthread_mutex_unlock(&(info->philo_dead_mutex[philo_id]));
 		return (DEAD);
-	}
-	pthread_mutex_unlock(&(info->philo_dead_mutex[philo_id]));
 	return (0);
 }
 
 int	ft_philo_died(t_info *info, t_philo *philo)
 {
-	pthread_mutex_lock(&(info->philo_dead_mutex[philo->id]));
 	info->philo_list[philo->id] = DEAD;
-	pthread_mutex_unlock(&(info->philo_dead_mutex[philo->id]));
 	return (DEAD);
 }

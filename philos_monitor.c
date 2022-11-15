@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 13:19:35 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/14 19:30:10 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/15 19:32:33 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,6 @@ void	ft_kill_all_philos(t_info *info)
 
 	i = -1;
 	while (++i < info->total_philos)
-	{
-		pthread_mutex_lock(&(info->philo_dead_mutex[i]));
 		info->philo_list[i] = DEAD;
-		// printf("Dead id: %d\n", info->philo_list[i]);
-		pthread_mutex_unlock(&info->philo_dead_mutex[i]);
-	}
 	ft_usleep(1);
 }
