@@ -1,15 +1,35 @@
 NAME = philo
 CC = cc
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
 
 RM = rm -rf
 
-MANDATORY_SRC = main.c utils.c parser.c philos_routine.c philos_end.c
+OBJS_DIR = objs/
 
-NAME:
-	$(CC) $(FLAGS) $(MANDATORY_SRC) -o $(NAME)
+MANDATORY_SRC = main philos_monitor philos_utils philos_parser philos_locks \
+				philos_routine philos_end philos_error philos_time
 
-fclean:
+MAIN = $(addsuffix .c, $(MANDATORY_SRC))
+
+OBJS = $(addsuffix .o, $(MANDATORY_SRC))
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(FLAGS) $(OBJS_DIR)$< -o $(NAME) 
+
+.c.o: $(MAIN)
+	$(CC) -c -o $(OBJS_DIR)$@ $<
+
+clean: $(OBJS)
+	$(RM) $(OBJS_DIR) $<
+
+fclean: clean
 	$(RM) $(NAME)
 
-clean: fclean
+norm:
+	@norminette | grep Error!
+
+re:	fclean all
+
+.phony: norm
