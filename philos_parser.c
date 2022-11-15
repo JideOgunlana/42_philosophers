@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 16:57:52 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/14 13:53:37 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/15 21:43:54 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	invalid_philo(char **argv)
 int	invalid_time_args(char **argv)
 {
 	if (ft_atoi(argv[2]) < 60 || ft_atoi(argv[3]) < 60
-		|| ft_atoi(argv[4]) < 60)
+		|| ft_atoi(argv[4]) < 60 || ft_atoi(argv[5]) < 1)
 	{
 		ft_perror(INVALID_TIME);
 		return (INVALID_TIME);

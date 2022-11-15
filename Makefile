@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/11/15 21:35:01 by bogunlan          #+#    #+#              #
+#    Updated: 2022/11/15 21:40:23 by bogunlan         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = philo
 CC = cc
 FLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
@@ -5,25 +17,25 @@ FLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g
 
 RM = rm -rf
 
-OBJS_DIR = objs/
+SRC = main.c philos_monitor.c philos_utils.c philos_parser.c philos_locks.c \
+				philos_routine.c philos_end.c philos_error.c philos_time.c
 
-MANDATORY_SRC = main philos_monitor philos_utils philos_parser philos_locks \
-				philos_routine philos_end philos_error philos_time
-
-MAIN = $(addsuffix .c, $(MANDATORY_SRC))
-
-OBJS = $(addsuffix .o, $(MANDATORY_SRC))
+OBJS = $(addprefix objs/, $(notdir $(SRC:.c=.o)))
+HEADER = include/philo.h
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC)  $(FLAGS) $(OBJS_DIR)* -o $(NAME) 
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME) 
 
-.c.o: $(MAIN)
-	$(CC) -c -o $(OBJS_DIR)$@ $<
+objs/%.o: %.c | objs
+	$(CC) -c $< -o $@
+
+objs:
+	mkdir objs
 
 clean:
-	$(RM) $(OBJS_DIR)*
+	$(RM) objs
 
 fclean: clean
 	$(RM) $(NAME)
@@ -33,4 +45,4 @@ norm:
 
 re:	fclean all
 
-.phony: norm
+.PHONY: norm all clean fclean re

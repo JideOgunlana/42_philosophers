@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 17:23:15 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/15 19:35:52 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/15 21:45:27 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	clean_up(t_info *info, pthread_t **philos)
 {
 	int	i;
-	
+
 	i = info->total_philos;
 	while (i > 0)
 	{
