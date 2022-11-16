@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:07:39 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/15 13:33:08 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:58:34 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int		check_args(char *str);
 int		parse_args(int argc, char **argv);
 int		invalid_args(int argc, char **argv);
 int		invalid_philo(char **argv);
-int		invalid_time_args(char **argv);
+int		invalid_time_args(int argc, char **argv);
 void	ft_perror(int err_num);
 
 size_t	get_time(void);

@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:52:55 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/15 19:35:54 by bogunlan         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:58:57 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	main(int argc, char *argv[])
 
 	if (invalid_args(argc, argv))
 		return (0);
-	if (invalid_philo(argv) || invalid_time_args(argv))
+	if (invalid_philo(argv) || invalid_time_args(argc, argv))
 		return (0);
 	if (init_info(argc, argv, &info))
 		return (0);
