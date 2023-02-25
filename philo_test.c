@@ -7,7 +7,7 @@
 
 enum philo_data
 {
-    PHILO_COUNT = 3
+    PHILO_COUNT = 5
 };
 
 typedef struct s_pthread_mutex
