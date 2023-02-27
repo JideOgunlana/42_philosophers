@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 16:53:36 by bogunlan          #+#    #+#             */
-/*   Updated: 2023/02/27 03:48:15 by bogunlan         ###   ########.fr       */
+/*   Updated: 2023/02/27 06:24:12 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	get_philo_position(t_info *info)
 	pthread_mutex_unlock(&(info->read_shared_var));
 	return (position);
 }
-
 
 void	ft_print_info(t_philo *philo, size_t current_time, int c)
 {

@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:52:55 by bogunlan          #+#    #+#             */
-/*   Updated: 2023/02/24 17:45:57 by bogunlan         ###   ########.fr       */
+/*   Updated: 2023/02/27 06:22:38 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ int	init_mutexes(t_info *info)
 		return (mutex_error);
 	if (pthread_mutex_init(&(info->print_mutex), NULL))
 		return (mutex_error);
-	info->chop_sticks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * info->total_philos);
+	info->chop_sticks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * \
+	info->total_philos);
 	i = 0;
 	while (i < info->total_philos)
 	{

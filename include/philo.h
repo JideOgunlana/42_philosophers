@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:07:39 by bogunlan          #+#    #+#             */
-/*   Updated: 2023/02/27 03:42:01 by bogunlan         ###   ########.fr       */
+/*   Updated: 2023/02/27 06:24:27 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ void	*routine(void *philo_info);
 int		thinking(t_info *info, t_philo *philo);
 int		sleeping(t_info *info, t_philo *philo);
 int		eating(t_info *info, t_philo *philo);
-
 
 void	ft_print_info(t_philo *philo, size_t present_time, int c);
 void	clean_up(t_info *info);
