@@ -6,7 +6,7 @@
 #    By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/15 21:35:01 by bogunlan          #+#    #+#              #
-#    Updated: 2023/02/24 17:46:12 by bogunlan         ###   ########.fr        #
+#    Updated: 2023/02/27 05:03:50 by bogunlan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ FLAGS = -Wall -Werror -Wextra -pthread #-fsanitize=thread -g
 
 RM = rm -rf
 
-SRC = main.c philos_monitor.c philos_utils.c philos_parser.c \
+SRC = main.c philos_monitor.c philos_utils.c philos_parser.c philos_locks.c\
 				philos_routine.c philos_end.c philos_error.c philos_time.c
 
 OBJS = $(addprefix objs/, $(notdir $(SRC:.c=.o)))

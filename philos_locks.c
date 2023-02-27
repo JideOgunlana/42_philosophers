@@ -6,71 +6,95 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/12 13:30:41 by bogunlan          #+#    #+#             */
-/*   Updated: 2023/02/21 19:45:17 by bogunlan         ###   ########.fr       */
+/*   Updated: 2023/02/27 05:09:19 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/philo.h"
 
-/* int	ft_is_chop_stick_used(t_info *info, t_philo *philo, char c)
+void	check_philo_status(t_info *info, t_philo *philo)
 {
-	if (c == 'l' && philo->lcs != 1)
+	if (get_time_in_ms() - philo->last_eat_time >= info->time_to_die)
 	{
-		pthread_mutex_lock(&(info->chop_sticks[philo->l_chop_stick]));
-		if (info->chop_stick_status[philo->l_chop_stick] != 0)
-		{
-			pthread_mutex_unlock(&(info->chop_sticks[philo->l_chop_stick]));
-			return (1);
-		}
-		ft_lock_chop_sticks(info, philo, 'l');
-		pthread_mutex_unlock(&(info->chop_sticks[philo->l_chop_stick]));
+		info->philo_list[philo->id] = DEAD;
+		philo->philo_status = DEAD;
 	}
-	else if (c == 'r' && philo->rcs != 1)
+	else if (info->time_to_eat * info->total_philos >= info->time_to_die && \
+	info->total_philos % 2 != 0)
 	{
-		pthread_mutex_lock(&(info->chop_sticks[philo->r_chop_stick]));
-		if (info->chop_stick_status[philo->r_chop_stick] != 0)
-		{
-			pthread_mutex_unlock(&(info->chop_sticks[philo->r_chop_stick]));
-			return (1);
-		}
-		ft_lock_chop_sticks(info, philo, 'r');
-		pthread_mutex_unlock(&(info->chop_sticks[philo->r_chop_stick]));
+				philo->philo_status = DEAD;
 	}
-	return (0);
+	else if (info->philo_list[philo->id] == DEAD)
+	{
+		philo->philo_status = DEAD;
+	}
 }
 
-int	ft_lock_chop_sticks(t_info *info, t_philo *philo, char c)
+void	pick_left_fork(t_info *info, t_philo *philo)
 {
-	if (c == 'r')
-	{
-		info->chop_stick_status[philo->r_chop_stick] = 1;
-		philo->rcs = 1;
-		ft_print_info(philo, get_time_in_ms(), CHOP_STICK_TAKEN);
-	}
-	else if (c == 'l')
-	{
-		info->chop_stick_status[philo->l_chop_stick] = 1;
-		philo->lcs = 1;
-		ft_print_info(philo, get_time_in_ms(), CHOP_STICK_TAKEN);
-	}
-	return (0);
+	pthread_mutex_lock(&info->print_mutex);
+	if (info->pls_print)
+		ft_print_info(philo, get_time_in_ms(), LEFT);
+	pthread_mutex_unlock(&info->print_mutex);
+	info->chop_stick_status[(philo->id + 1) % info->total_philos] = 1;
 }
 
-void	ft_unlock_chop_sticks(t_info *info, t_philo *philo, char c)
+void	print_eating(t_info *info, t_philo *philo)
 {
-	if (c == 'r')
+	if (info->pls_print)
 	{
-		philo->rcs = 0;
-		pthread_mutex_lock(&(info->chop_sticks[philo->r_chop_stick]));
-		info->chop_stick_status[philo->r_chop_stick] = 0;
-		pthread_mutex_unlock(&(info->chop_sticks[philo->r_chop_stick]));
-	}
-	else if (c == 'l')
-	{
-		philo->lcs = 0;
-		pthread_mutex_lock(&(info->chop_sticks[philo->l_chop_stick]));
-		info->chop_stick_status[philo->l_chop_stick] = 0;
-		pthread_mutex_unlock(&(info->chop_sticks[philo->l_chop_stick]));
+		if (info->time_to_eat >= info->time_to_die)
+		{
+			info->philo_list[philo->id] = DEAD;
+			philo->philo_status = DEAD;
+		}
+		ft_print_info(philo, get_time_in_ms(), EATING);
 	}
 }
- */
+
+void	even_seated_philos_routine(t_info *info, t_philo *philo)
+{
+	pthread_mutex_lock(&info->chop_sticks[(philo->id+1) % info->total_philos]);
+	pick_left_fork(info, philo);
+	info->chop_stick_status[(philo->id + 1) % info->total_philos] = 1;
+	check_philo_status(info, philo);
+	if (philo->philo_status == DEAD)
+		return ;
+	pthread_mutex_lock(&info->chop_sticks[philo->id]);
+	pthread_mutex_lock(&info->print_mutex);
+	if (info->pls_print)
+		ft_print_info(philo, get_time_in_ms(), RIGHT);
+	pthread_mutex_unlock(&info->print_mutex);
+	info->chop_stick_status[philo->id] = 1;
+	pthread_mutex_lock(&(info->read_shared_var));
+	info->eat_count++;
+	pthread_mutex_lock(&info->print_mutex);
+	print_eating(info, philo);
+	pthread_mutex_unlock(&info->print_mutex);
+	pthread_mutex_unlock(&(info->read_shared_var));
+	philo->last_eat_time = get_time_in_ms();
+	ms_sleep(info->time_to_eat);
+}
+
+void	odd_seated_philos_routine(t_info *info, t_philo *philo)
+{
+	pthread_mutex_lock(&info->chop_sticks[philo->id]);
+	pthread_mutex_lock(&info->print_mutex);
+	if (info->pls_print)
+		ft_print_info(philo, get_time_in_ms(), RIGHT);
+	pthread_mutex_unlock(&info->print_mutex);
+	info->chop_stick_status[philo->id] = 1;
+	check_philo_status(info, philo);
+	if (philo->philo_status == DEAD)
+		return ;
+	pthread_mutex_lock(&info->chop_sticks[(philo->id + 1) % info->total_philos]);
+	pick_left_fork(info, philo);
+	pthread_mutex_lock(&(info->read_shared_var));
+	info->eat_count++;
+	pthread_mutex_lock(&info->print_mutex);
+	print_eating(info, philo);
+	pthread_mutex_unlock(&info->print_mutex);
+	pthread_mutex_unlock(&(info->read_shared_var));
+	philo->last_eat_time = get_time_in_ms();
+	ms_sleep(info->time_to_eat);
+}

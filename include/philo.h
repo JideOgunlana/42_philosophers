@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 11:07:39 by bogunlan          #+#    #+#             */
-/*   Updated: 2023/02/24 15:16:01 by bogunlan         ###   ########.fr       */
+/*   Updated: 2023/02/27 03:42:01 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,12 @@ typedef struct s_monitor
 	int		eat_limit;
 	int		end_simulation;
 	int		dead_philo_id;
-	size_t	end_time;
 }				t_monitor;
 
 typedef struct s_philo
 {
 	int		id;
 	int		philo_status;
-	int		total_philos;
-	int		*philo_list;
-	int		pls_print;
 	size_t	start_time;
 	size_t	last_eat_time;
 }				t_philo;
@@ -105,10 +101,17 @@ int		ft_create_thread(t_info *info);
 int		get_philo_position(t_info *info);
 void	ms_sleep(size_t time);
 
+void	odd_seated_philos_routine(t_info *info, t_philo *philo);
+void	even_seated_philos_routine(t_info *info, t_philo *philo);
+void	print_eating(t_info *info, t_philo *philo);
+void	pick_left_fork(t_info *info, t_philo *philo);
+void	check_philo_status(t_info *info, t_philo *philo);
+
 void	*routine(void *philo_info);
 int		thinking(t_info *info, t_philo *philo);
 int		sleeping(t_info *info, t_philo *philo);
 int		eating(t_info *info, t_philo *philo);
+
 
 void	ft_print_info(t_philo *philo, size_t present_time, int c);
 void	clean_up(t_info *info);
