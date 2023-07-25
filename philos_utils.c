@@ -6,7 +6,7 @@
 /*   By: bogunlan <bogunlan@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 16:53:36 by bogunlan          #+#    #+#             */
-/*   Updated: 2022/11/15 14:43:03 by bogunlan         ###   ########.fr       */
+/*   Updated: 2023/02/27 06:24:12 by bogunlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,26 +42,17 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-size_t	ft_get_philo_position(t_info *info)
+int	get_philo_position(t_info *info)
 {
-	size_t	position;
+	int	position;
 
-	pthread_mutex_lock(&(info->mutex));
+	pthread_mutex_lock(&(info->read_shared_var));
 	info->count_philos += 1;
 	if (info->count_philos > info->total_philos)
 		info->count_philos = 1;
 	position = info->count_philos;
-	pthread_mutex_unlock(&(info->mutex));
+	pthread_mutex_unlock(&(info->read_shared_var));
 	return (position);
-}
-
-void	ft_get_chop_stick_num(t_philo *philo, t_info *info)
-{
-	if (philo->id == 0)
-		philo->l_chop_stick = info->total_philos - 1;
-	else
-		philo->l_chop_stick = philo->id - 1;
-	philo->r_chop_stick = philo->id;
 }
 
 void	ft_print_info(t_philo *philo, size_t current_time, int c)
@@ -78,7 +69,10 @@ void	ft_print_info(t_philo *philo, size_t current_time, int c)
 	else if (c == DEAD)
 		printf("%lu %d is dead\n", current_time - philo->start_time, \
 		philo->id + 1);
-	else if (c == CHOP_STICK_TAKEN)
-		printf("%lu %d  has taken a fork\n", current_time - philo->start_time, \
+	else if (c == LEFT)
+		printf("%lu %d has taken a fork\n", current_time - philo->start_time, \
+		philo->id + 1);
+	else if (c == RIGHT)
+		printf("%lu %d has taken a fork\n", current_time - philo->start_time, \
 		philo->id + 1);
 }
